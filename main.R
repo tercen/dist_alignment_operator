@@ -4,8 +4,14 @@ library(seqinr)
 library(tidyr)
 
 (ctx = tercenCtx())
-df <- ctx %>% select(.ri, .ci) %>%
-  mutate(letter = ctx$select(ctx$colors[[1]])[[1]]) %>%
+
+letters <- ctx$select(ctx$colors[[1]])[[1]]
+
+id_na_pos <- which(is.na(ctx$cselect(ctx$cnames[[1]]))) - 1
+if(length(id_na_pos) == 0) id_na_pos <- -1
+
+df <- ctx %>% select(.ri, .ci) %>% # filter(.ci != id_na_pos) %>% 
+  mutate(letter = letters) %>% filter(.ci != id_na_pos) %>% 
   spread(.ci, letter)
 df[is.na(df)] <- "-"
 

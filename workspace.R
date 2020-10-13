@@ -7,8 +7,14 @@ options("tercen.workflowId" = "a77770c3923fad0ca99b77fa8905471d")
 options("tercen.stepId"     = "7db7e18c-2668-49a6-b99d-91993d0d9942")
 
 (ctx = tercenCtx())
-df <- ctx %>% select(.ri, .ci) %>%
-  mutate(letter = ctx$select(ctx$colors[[1]])[[1]]) %>%
+
+letters <- ctx$select(ctx$colors[[1]])[[1]]
+
+id_na_pos <- which(is.na(ctx$cselect(ctx$cnames[[1]]))) - 1
+if(length(id_na_pos) == 0) id_na_pos <- -1
+
+df <- ctx %>% select(.ri, .ci) %>% # filter(.ci != id_na_pos) %>% 
+  mutate(letter = letters) %>% filter(.ci != id_na_pos) %>% 
   spread(.ci, letter)
 df[is.na(df)] <- "-"
 
