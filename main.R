@@ -1,9 +1,45 @@
 library(tercen)
 library(dplyr)
+library(seqinr)
+library(tidyr)
 
-(ctx = tercenCtx())  %>% 
-  select(.y, .ci, .ri) %>% 
-  group_by(.ci, .ri) %>%
-  summarise(median = median(.y)) %>%
+(ctx = tercenCtx())
+df <- ctx %>% select(.ri, .ci) %>%
+  mutate(letter = ctx$select(ctx$colors[[1]])[[1]]) %>%
+  spread(.ci, letter)
+df[is.na(df)] <- "-"
+
+aln <- list()
+aln$nam <- df[,1][[1]]
+aln$seq <- as.list(apply(df[,-1], 1, function(x) paste0(x[!is.na(x)], collapse = "")))
+aln$com <- NA
+aln$nb <- length(aln$nam)
+class(aln) <- "alignment"
+
+sequence_type <- "protein"
+if(!is.null(ctx$op.value('sequence_type'))) {
+  sequence_type <- ctx$op.value('sequence_type')
+} 
+matrix <- "similarity"
+if(!is.null(ctx$op.value('matrix'))) {
+  matrix <- ctx$op.value('matrix')
+}
+gap <- 0
+if(!is.null(ctx$op.value('gap'))) {
+  gap <- as.numeric(ctx$op.value('gap'))
+}
+if(sequence_type != "protein" & matrix == "similarity") {
+  stop("Similarity matrix only available for protein sequences.")
+}
+dist.aln <- dist.alignment(aln, matrix = matrix, gap = gap)
+xy <- t(combn(1:ncol(dist.aln), 2))
+rnames <- ctx$rselect()[[1]]
+df_out <- data.frame(
+  .ri = xy[, 1] - 1,
+  dist_to = rnames[xy[, 2]],
+  dist = c(dist.aln)
+)
+df_out %>%
+  rbind(data.frame(.ri = 1:length(rnames) - 1, dist_to = rnames, dist = 0)) %>%
   ctx$addNamespace() %>%
   ctx$save()

@@ -1,34 +1,35 @@
-# Introduction
+# Multiple Sequence Alignment operator
 
-This is a template repository.
+##### Description
 
-Use this template repository during the first step of developing a tercen operator (in R) on github.
+`dist_alignment` computes pairwise distances between aligned biological sequences.
 
-An overview of steps for developing an operator are:
+##### Usage
 
-1. create a github repo
-2. install tercen_studio
-3. login to tercen_studio
-4. git clone the newly created repo
-5. start developing in R in tercen_studio
-6. add R packages to the repo
-7. push to the github repo
-8. go to tercen and install the operator
+Input projection|.
+---|---
+`row`        |  factor, sequence names/IDs
+`col`        |  numeric, position
+`y-axis`        |  numeric, value corresponding to amino or nucleic acid
+`color`        |  factor, optional, letter
 
-For step 1, when creating the repo on github, you will notice the option to use a template repository, choose the `templateR_operator` repository and select it as the template repository.
+Properties|.
+---|---
+`sequence_type` | whether it is `dna`, `rna`, or `protein` sequences
+`matrix` | the matrix distance to be used, can be "similarity" or "identity"
+`gap` | with nucleotides, if set to 1, gaps will be counted in the identity measure
 
-After creation, you now have a new repository with all the convenient files for making a new operator (in R) for tercen.
+Output relations|.
+---|---
+`dist_to`        | numeric, sequence name
+`dist`        | numeric, distance
 
-Use `tercen_studio` to clone the new repository and start programming in `tercen_studio`
+##### Details
 
-it includes the skeleton files 
+This operator compute a matrix of pairwise distances from aligned sequences using similarity (Fitch matrix, for protein sequences only) or identity matrix (for protein and DNA sequences). The resulting matrix contains the squared root of the pairwise distances. For example, if identity between 2 sequences is 80 the squared root of (1.0 - 0.8) i.e. 0.4472136.
 
-* `main.R`
-* `workspace.R`
-* `operator.json`
-* `README_template.md`
-* `doc` directory
+##### See Also
 
-please remember to change the `README_template.md` to  `README.template.md`
+https://github.com/tercen/readfasta_operator
 
-inside the `doc` there is a `dev_commands.md` file which contains useful development command lines.
+https://github.com/tercen/msa_operator
