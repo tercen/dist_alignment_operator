@@ -1,4 +1,4 @@
-# Multiple Sequence Alignment operator
+# Pairwise sequence distance operator
 
 ##### Description
 
