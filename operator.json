@@ -1,6 +1,6 @@
 {
-  "name": "Distance between aligned sequences",
-  "description": "Computes the distance between aligned biological sequences",
+  "name": "Alignment Distance",
+  "description": "Calculates the distance between aligned biological sequences",
   "tags": ["bioinformatics"],
   "authors": ["tercen"],
   "urls": ["https://github.com/tercen/dist_alignment_operator"],
